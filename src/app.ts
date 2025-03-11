@@ -1,12 +1,17 @@
 import express, { NextFunction, Request, Response } from 'express';
 import userRouter from './routers/user.router';
 import basketRouter from './routers/basket.router';
+import cors from 'cors';
 
 const app = express();
 const PORT = 3000;
 
 app.use((express.json()));
-
+app.use(cors({
+    methods: ['GET', 'DELETE'],
+    origin: ['http://localhost:3001'],
+    credentials: true
+}))
 app.use('/user', userRouter);
 app.use('/basket', basketRouter);
 

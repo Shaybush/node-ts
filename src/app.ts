@@ -2,6 +2,7 @@ import express, { NextFunction, Request, Response } from 'express';
 import userRouter from './routers/user.router';
 import basketRouter from './routers/basket.router';
 import cors from 'cors';
+import helmet from 'helmet';
 
 const app = express();
 const PORT = 3000;
@@ -13,7 +14,6 @@ app.use(cors({
     credentials: true
 }))
 app.use(helmet());
-console.log("I'm second branch!!!!");
 
 app.use('/user', userRouter);
 app.use('/basket', basketRouter);

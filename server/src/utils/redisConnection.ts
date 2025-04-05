@@ -1,4 +1,5 @@
 import { createClient, RedisClientType } from 'redis';
+import { REDIS_URI } from './environment-variables';
 
 export interface IRedisConnection {
     connect(): Promise<void>;
@@ -18,7 +19,7 @@ export class RedisConnection implements IRedisConnection {
     async connect(): Promise<void> {
         try {
             this.client = createClient({
-                url: process.env.REDIS_URI
+                url: REDIS_URI
             });
 
             // Set up error handling

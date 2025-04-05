@@ -3,9 +3,10 @@ import userRouter from './routers/user.router';
 import basketRouter from './routers/basket.router';
 import cors from 'cors';
 import helmet from 'helmet';
+import { PORT } from './utils/environment-variables';
+import { RedisConnection } from './utils/redisConnection';
 
 const app = express();
-const PORT = 3000;
 
 app.use((express.json()));
 app.use(cors({
@@ -14,6 +15,8 @@ app.use(cors({
     credentials: true
 }))
 app.use(helmet());
+// connect to redis
+RedisConnection.getInstance().connect();
 
 app.use('/user', userRouter);
 app.use('/basket', basketRouter);

@@ -1,19 +1,43 @@
-import { basket, TechItem } from "../stub/basket.stub";
+import { getBasketRepository } from "../repositories/basket.repository";
+import { TechItem } from "../stub/basket.stub";
 
-const getBasket = (): TechItem[] => {
+const getBasket = async (): Promise<TechItem[]> => {
     try {
-        return basket;
+        const basketRepository = getBasketRepository();
+        return await basketRepository.getBasket();
     } catch (error: any) {
         throw new Error(error.message)
     }
 }
 
-/**
- * TODO - add the following services:
- *  **deleteItem** - params: id should delete id from the list
- *  **editItem** - params: id body: { name, category, brand, price, quantity }
- *  should edit item
- *  **addItem** - body: { name, category, brand, price, quantity }
- *  */
+const addItem = async (item: TechItem) => {
+    try {
+        const basketRepository = getBasketRepository();
+        await basketRepository.addItem(item);
+        return await basketRepository.getBasket();
+    } catch (error: any) {
+        throw new Error(error.message)
+    }
+}
 
-export { getBasket }
+const deleteItem = async (id: number) => {
+    try {
+        const basketRepository = getBasketRepository();
+        await basketRepository.deleteItem(id);
+        return await basketRepository.getBasket();
+    } catch (error: any) {
+        throw new Error(error.message)
+    }
+}
+
+const editItem = async (id: number, item: TechItem) => {
+    try {
+        const basketRepository = getBasketRepository();
+        await basketRepository.editItem(id, item);
+        return await basketRepository.getBasket();
+    } catch (error: any) {
+        throw new Error(error.message)
+    }
+}
+
+export { getBasket, addItem, deleteItem, editItem }

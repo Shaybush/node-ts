@@ -37,13 +37,15 @@ export class BasketRepository {
         await this.editBasket(basket);
     }
 
-    async deleteItem(id: number): Promise<void> {
+    async deleteItem(id: number): Promise<boolean> {
         const basket = await this.getBasket();
         const index = basket.findIndex(i => i.id === id);
         if (index !== -1) {
             basket.splice(index, 1);
+            await this.editBasket(basket);
+            return true;
         }
-        await this.editBasket(basket);
+        return false;
     }
 
     async editItem(id: number, item: TechItem): Promise<void> {

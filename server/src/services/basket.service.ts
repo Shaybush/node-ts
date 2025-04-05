@@ -23,7 +23,10 @@ const addItem = async (item: TechItem) => {
 const deleteItem = async (id: number) => {
     try {
         const basketRepository = getBasketRepository();
-        await basketRepository.deleteItem(id);
+        const isDeleted = await basketRepository.deleteItem(id);
+        if (!isDeleted) {
+            throw new Error('Item not found');
+        }
         return await basketRepository.getBasket();
     } catch (error: any) {
         throw new Error(error.message)

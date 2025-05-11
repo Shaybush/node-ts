@@ -1,7 +1,9 @@
 import UserCard from '@src/components/UserCard';
+import { isUserLoadingSelector } from '@src/store/slices/user/selectors';
 import { API_URLS } from '@src/utils/constants';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 export type User = {
   name: string;
@@ -13,6 +15,7 @@ export type User = {
 };
 
 export default function User() {
+  const loading = useSelector(isUserLoadingSelector);
   const [users, setUsers] = useState<User[]>([] as User[]);
   const [active, setActive] = useState<boolean>(false);
   const [id1, setId] = useState<NodeJS.Timeout>();
@@ -47,6 +50,7 @@ export default function User() {
       {users.map((user) => (
         <UserCard key={user.email} {...user} />
       ))}
+      {loading ? <div>loading...</div> : null}
     </div>
   );
 }

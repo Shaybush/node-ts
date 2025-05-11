@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { UserState } from './types';
+import { slicesName } from '@src/store/slicesNames';
 
 const initialState: UserState = {
   isLogged: false,
@@ -8,7 +9,7 @@ const initialState: UserState = {
 };
 
 const userSlice = createSlice({
-  name: 'users',
+  name: slicesName.USER,
   initialState,
   reducers: {
     updateUser: (state, action) => {

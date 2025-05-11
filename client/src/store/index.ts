@@ -2,7 +2,8 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import { userReducer } from './slices/user';
 
 const rootReducer = combineReducers({
-  user: userReducer,
+  user: userReducer, // slice 1
+  // basket: basketReducer, // slice 2 
 });
 
 export function createStore(preloadedState?: State) {

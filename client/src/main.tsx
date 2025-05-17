@@ -6,9 +6,11 @@ import App from '@src/App';
 import SuspenseUntilReady from './components/SuspenseUntilReady';
 import DarkThemeProvider from './providers/DarkThemeProvider';
 import { createStore } from './store';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
 
 const store = createStore();
+const queryClient = new QueryClient();
 
 function Client() {
   return (
@@ -19,11 +21,13 @@ function Client() {
         }}
       >
         <StoreProvider store={store}>
-          <BrowserRouter>
-            <DarkThemeProvider>
-              <App />
-            </DarkThemeProvider>
-          </BrowserRouter>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <DarkThemeProvider>
+                <App />
+              </DarkThemeProvider>
+            </BrowserRouter>
+          </QueryClientProvider>
         </StoreProvider>
       </SuspenseUntilReady>
     </StrictMode>

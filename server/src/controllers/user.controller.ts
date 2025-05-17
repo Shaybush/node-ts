@@ -1,12 +1,16 @@
 import { NextFunction, Request, Response } from 'express';
 import { addUser, getAllUsers, getUserAvg, getUsersOlderThenAge, updateUserAge } from '../services/user.service';
-import { usersStub } from '../data/user.stub';
 import { validUser } from '../validations/user.validation';
+import { usersData } from '../data/generateData';
 
 export const userController = {
-    getAll: (req: Request, res: Response, next: NextFunction) => {
+    getAll: async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const users = getAllUsers();
+            const { start = 0, size = 50, sort = "" } = req.query;
+            const startIndex = Number(start);
+            const pageSize = Number(size);
+
+            const users = await getAllUsers(startIndex, pageSize, sort as string);
             res.status(200).json(users)
         } catch (error) {
             next(error)
@@ -27,7 +31,7 @@ export const userController = {
             validUser(req.body);
 
             addUser(req.body);
-            res.status(201).json(usersStub);
+            res.status(201).json(usersData);
         } catch (error) {
             next(error);
         }
@@ -52,7 +56,7 @@ export const userController = {
 
             const isChanged = updateUserAge(name, age);
             if (!isChanged) throw new Error('user not found');
-            res.status(201).json(usersStub)
+            res.status(201).json(usersData)
         } catch (error) {
             next(error);
         }

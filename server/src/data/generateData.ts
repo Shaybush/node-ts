@@ -23,3 +23,5 @@ const newUser = (index: number): User => {
 export const generateData = (size: number): User[] => {
     return range(size).map(newUser);
 };
+
+export const usersData = generateData(100);

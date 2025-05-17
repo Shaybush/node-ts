@@ -1,9 +1,27 @@
-import { User } from "../data/user.stub"
-import axios from "axios";
+import { User, UserApiResponse } from "../types/user.types";
+import { usersData } from "../data/generateData";
 
-const getAllUsers = async (): Promise<User[]> => {
+const getAllUsers = async (startIndex: number, pageSize: number, sort: string): Promise<UserApiResponse> => {
     try {
-        return axios.get('http://localhost:8080/users');
+        let sortedData = [...usersData];
+
+        if (sort) {
+            const [key, order] = sort.split(":");
+            sortedData.sort((a, b) => {
+                if (order === "desc") return a[key as keyof typeof a] < b[key as keyof typeof b] ? 1 : -1;
+                return a[key as keyof typeof a] > b[key as keyof typeof b] ? 1 : -1;
+            });
+        }
+
+        const pagedData = sortedData.slice(startIndex * pageSize, startIndex * pageSize + pageSize);
+
+        const response: UserApiResponse = {
+            data: pagedData,
+            meta: {
+                totalRowCount: usersData.length,
+            },
+        };
+        return response;
     } catch (error: any) {
         throw new Error(error.message)
     }
@@ -44,7 +62,7 @@ const getUsersOlderThenAge = (age: number) => {
 
 const updateUserAge = (name: string, age: number): boolean => {
     try {
-        const user = usersData.find(user => user.name === name);
+        const user = usersData.find(user => user.firstName === name);
         if (user) {
             user.age = age;
             return true;

@@ -136,17 +136,19 @@ export default function User() {
   }
 
   return (
-    <div className='app'>
+    <div className='app bg-white rounded-lg shadow-lg p-6'>
       {/* User announcement */}
       {process.env.NODE_ENV === 'development' ? (
-        <p>
+        <p className='text-sm text-gray-600 mb-4'>
           <strong>Notice:</strong> You are currently running React in development mode. Virtualized rendering
           performance will be slightly degraded until this application is built for production.
         </p>
       ) : null}
-      ({flatData.length} of {totalDBRowCount} rows fetched)
+      <div className='mb-2 text-sm text-gray-700'>
+        ({flatData.length} of {totalDBRowCount} rows fetched)
+      </div>
       <div
-        className='container'
+        className='container bg-white rounded-lg border border-gray-200'
         onScroll={(e) => fetchMoreOnBottomReached(e.currentTarget)}
         ref={tableContainerRef}
         style={{
@@ -156,7 +158,7 @@ export default function User() {
         }}
       >
         {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
-        <table style={{ display: 'grid' }}>
+        <table style={{ display: 'grid' }} className='w-full'>
           <thead
             style={{
               display: 'grid',
@@ -166,7 +168,7 @@ export default function User() {
             }}
           >
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }}>
+              <tr key={headerGroup.id} style={{ display: 'flex', width: '100%' }} className='bg-gray-50'>
                 {headerGroup.headers.map((header) => {
                   return (
                     <th
@@ -175,10 +177,13 @@ export default function User() {
                         display: 'flex',
                         width: header.getSize(),
                       }}
+                      className='px-4 py-3 text-left text-sm font-semibold text-gray-700 border-b border-gray-200'
                     >
                       <div
                         {...{
-                          className: header.column.getCanSort() ? 'cursor-pointer select-none' : '',
+                          className: header.column.getCanSort()
+                            ? 'cursor-pointer select-none flex items-center gap-1'
+                            : '',
                           onClick: header.column.getToggleSortingHandler(),
                         }}
                       >
@@ -214,6 +219,7 @@ export default function User() {
                     transform: `translateY(${virtualRow.start}px)`, //this should always be a `style` as it changes on scroll
                     width: '100%',
                   }}
+                  className='hover:bg-gray-50 transition-colors duration-150'
                 >
                   {row.getVisibleCells().map((cell) => {
                     return (
@@ -223,6 +229,7 @@ export default function User() {
                           display: 'flex',
                           width: cell.column.getSize(),
                         }}
+                        className='px-4 py-3 text-sm text-gray-700 border-b border-gray-100'
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
@@ -234,7 +241,7 @@ export default function User() {
           </tbody>
         </table>
       </div>
-      {isFetching && <div>Fetching More...</div>}
+      {isFetching && <div className='text-center py-4 text-sm text-gray-500'>Fetching More...</div>}
     </div>
   );
 }

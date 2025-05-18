@@ -5,6 +5,9 @@ const User = lazy(() => {
   console.log("user page loaded");
   return import('./pages/User')
 });
+const Test = lazy(() => {
+  return import('./pages/Test')
+})
 
 export const routes = [
   {
@@ -18,5 +21,11 @@ export const routes = [
     text: 'Users',
     activeNames: ['/users'],
     Component: User,
+  },
+  {
+    to: '/test',
+    text: 'test',
+    activeNames: ['/test'],
+    Component: Test,
   },
 ];

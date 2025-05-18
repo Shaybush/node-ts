@@ -1,7 +1,7 @@
 import { User, UserApiResponse } from "../types/user.types";
 import { usersData } from "../data/generateData";
 
-const getAllUsers = async (startIndex: number, pageSize: number, sort: string): Promise<UserApiResponse> => {
+const getAllUsers = async (page: number, pageSize: number, sort: string): Promise<UserApiResponse> => {
     try {
         let sortedData = [...usersData];
 
@@ -13,7 +13,9 @@ const getAllUsers = async (startIndex: number, pageSize: number, sort: string): 
             });
         }
 
-        const pagedData = sortedData.slice(startIndex * pageSize, startIndex * pageSize + pageSize);
+        const pagedData = sortedData.slice(page * pageSize, page * pageSize + pageSize);
+
+        await sleep();
 
         const response: UserApiResponse = {
             data: pagedData,
@@ -26,6 +28,14 @@ const getAllUsers = async (startIndex: number, pageSize: number, sort: string): 
         throw new Error(error.message)
     }
 }
+
+const sleep = (ms = 1000) => {
+    return new Promise<void>((resolve) => {
+        setTimeout(() => {
+            resolve();
+        }, ms);
+    });
+};
 
 const addUser = (user: User): User[] => {
     try {

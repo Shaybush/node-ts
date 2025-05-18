@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import {
   ColumnDef,
   flexRender,
@@ -16,9 +16,9 @@ import { formatDate } from '@src/utils/functions';
 export default function User() {
   //we need a reference to the scrolling element for logic down below
   const tableContainerRef = useRef<HTMLDivElement>(null);
-  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([]);
 
-  const columns = React.useMemo<ColumnDef<UserType>[]>(
+  const columns = useMemo<ColumnDef<UserType>[]>(
     () => [
       {
         accessorKey: 'id',
@@ -68,28 +68,30 @@ export default function User() {
   const { data, fetchNextPage, isFetching, isLoading } = useUserData(sorting);
 
   // flatten the array of arrays from the useInfiniteQuery hook
-  const flatData = React.useMemo(() => data?.pages?.flatMap((page) => page.data) ?? [], [data]);
+  const flatData = useMemo(() => data?.pages?.flatMap((page) => page.data) ?? [], [data]);
   const totalDBRowCount = data?.pages?.[0]?.meta?.totalRowCount ?? 0;
   const totalFetched = flatData.length;
 
   // called on scroll and possibly on mount to fetch more data as the user scrolls and reaches bottom of table
-  const fetchMoreOnBottomReached = React.useCallback(
+  const fetchMoreOnBottomReached = useCallback(
     (containerRefElement?: HTMLDivElement | null) => {
       if (containerRefElement) {
         const { scrollHeight, scrollTop, clientHeight } = containerRefElement;
+
+        console.dir(containerRefElement);
         //once the user has scrolled within 500px of the bottom of the table, fetch more data if we can
         if (scrollHeight - scrollTop - clientHeight < 500 && !isFetching && totalFetched < totalDBRowCount) {
           fetchNextPage();
         }
       }
     },
-    [fetchNextPage, isFetching, totalFetched, totalDBRowCount],
+    [fetchNextPage, isFetching, totalFetched],
   );
 
   // a check on mount and after a fetch to see if the table is already scrolled to the bottom and immediately needs to fetch more data
   useEffect(() => {
     fetchMoreOnBottomReached(tableContainerRef.current);
-  }, [fetchMoreOnBottomReached]);
+  }, []);
 
   const table = useReactTable({
     data: flatData,

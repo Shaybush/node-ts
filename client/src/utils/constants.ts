@@ -1,7 +1,7 @@
 const LS_KEY_THEME = 'theme';
 const LS_KEY_SEARCH_PARAMS = 'search-params';
 const API_URL = 'http://localhost:8080';
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 100;
 
 const API_URLS = {
   users_service: {

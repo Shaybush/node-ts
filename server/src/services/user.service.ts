@@ -15,7 +15,7 @@ const getAllUsers = async (page: number, pageSize: number, sort: string): Promis
 
         const pagedData = sortedData.slice(page * pageSize, page * pageSize + pageSize);
 
-        await sleep();
+        // await sleep();
 
         const response: UserApiResponse = {
             data: pagedData,

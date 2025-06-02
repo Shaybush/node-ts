@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
 const HomePage = lazy(() => import('./pages/Home'));
+const PokemonPage = lazy(() => import('./pages/Pokemon/Pokemon'));
 const User = lazy(() => {
   console.log("user page loaded");
   return import('./pages/User')
@@ -27,5 +28,11 @@ export const routes = [
     text: 'test',
     activeNames: ['/test'],
     Component: Test,
+  },
+  {
+    to: '/pokemon',
+    text: 'pokemon',
+    activeNames: ['/pokemon'],
+    Component: PokemonPage,
   },
 ];

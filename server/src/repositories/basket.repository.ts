@@ -1,4 +1,4 @@
-import { TechItem } from "../stub/basket.stub";
+import { TechItem } from "../data/basket.stub";
 import { ONE_MONTH } from "../utils/constans";
 import { RedisConnection } from "../utils/redisConnection";
 
@@ -23,7 +23,7 @@ export class BasketRepository {
     }
 
     private async editBasket(basket: TechItem[]): Promise<void> {
-        // after 1 month, the basket will be deleted from redis if no change 
+        // after 1 month, the basket will be deleted from redis if no change
         await this.redisClient.getClient().SETEX('basket', ONE_MONTH, JSON.stringify(basket));
     }
 

@@ -21,7 +21,8 @@
     "express": "^4.21.2",
     "helmet": "^8.1.0",
     "redis": "^4.7.0",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "@faker-js/faker": "^8.4.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

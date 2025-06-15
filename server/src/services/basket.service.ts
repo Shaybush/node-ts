@@ -1,5 +1,5 @@
 import { getBasketRepository } from "../repositories/basket.repository";
-import { TechItem } from "../stub/basket.stub";
+import { TechItem } from "../data/basket.stub";
 
 const getBasket = async (): Promise<TechItem[]> => {
     try {

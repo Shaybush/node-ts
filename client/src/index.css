@@ -12,7 +12,6 @@
   color: inherit;
   scrollbar-color: rgba(93, 93, 255, 0.9) #7d8784 !important;
   scrollbar-width: thin !important;
-  font-family: Verdana, Geneva, Tahoma, 'arial', 'Times New Roman', tahoma;
 }
 
 *::-webkit-scrollbar {
@@ -86,6 +85,11 @@
   body::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 41, 41, 0.5);
   }
+
+.container {
+  border: 1px solid lightgray;
+  margin: 1rem auto;
+}
 }
 
 /* @layer components {} */

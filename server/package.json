@@ -7,22 +7,24 @@
     "dev": "nodemon src/app.ts",
     "start": "node dist/app.js",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "migration:db": "ts-node src/migrate.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "axios": "^1.8.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
     "express": "^4.21.2",
     "helmet": "^8.1.0",
+    "mongodb": "^6.3.0",
     "redis": "^4.7.0",
-    "zod": "^3.24.2",
-    "@faker-js/faker": "^8.4.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

@@ -1,14 +1,14 @@
 import mongoose from 'mongoose';
 const { Schema } = mongoose;
 
-type orderSchema = {
+type OrderSchema = {
     items: any;
     actual_amount: any;
     expected_amount: any;
     status: 'completed' | 'canceled' | 'denied'
 }
 
-const orderSchema = new Schema({
+const schema = new Schema({
     items: {
         product_name: { type: String, required: true },
         price: { type: Number, required: true },
@@ -24,5 +24,28 @@ const orderSchema = new Schema({
     }
 }, { timestamps: true });  // adds createdAt and updatedAt
 
-const orderModel = mongoose.model<orderSchema>('Order', orderSchema);
-export default orderModel;
+// Add a compound index (example: on actual_amount and status)
+schema.index({ actual_amount: 1, status: 1 });
+
+// Example pre-save hook
+schema.pre('save', function (next) {
+    console.log('About to save an order');
+    next();
+});
+
+// Example post hooks
+schema.post('init', function (doc) {
+    console.log('%s has been initialized from the db', doc._id);
+});
+schema.post('validate', function (doc) {
+    console.log('%s has been validated (but not saved yet)', doc._id);
+});
+schema.post('save', function (doc) {
+    console.log('%s has been saved', doc._id);
+});
+schema.post('deleteOne', function (doc) {
+    console.log('%s has been deleted', doc._id);
+});
+
+const orderSchema = mongoose.model<OrderSchema>('Order', schema);
+export default orderSchema;

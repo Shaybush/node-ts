@@ -1,8 +1,12 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { PORT } from './utils/environment-variables';
 import { RedisConnection } from './utils/redisConnection';
+import mongoose from 'mongoose';
+import orderSchema from './models/order.model';
+import userRouter from './routers/user.router';
+import basketRouter from './routers/basket.router';
 
 const app = express();
 
@@ -16,22 +20,15 @@ app.use(helmet());
 // connect to redis
 RedisConnection.getInstance().connect();
 
-import mongoose from 'mongoose';
-import orderModel from './models/order.model';
+app.use('/user', userRouter);
+app.use('/basket', basketRouter);
 
-// app.use('/user', userRouter);
-// app.use('/basket', basketRouter);
+app.get('/health', (req, res, next) => {
+    next(new Error('error'))
+    res.status(200).json({ message: 'OK' })
+});
 
-// app.get('/health', (req, res, next) => {
-//     next(new Error('error'))
-//     res.status(200).json({ message: 'OK' })
-// });
 
-// // error handling
-// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-//     console.error(error);
-//     res.status(400).json({ message: error.message });
-// })
 async function connectDB() {
     console.log("trying to connect mongoDB");
     mongoose.connect('mongodb://127.0.0.1:27017/Class4')
@@ -41,11 +38,12 @@ async function connectDB() {
 
 connectDB()
     .then(async () => {
-        await orderModel.find({});
-        // console.log(res);
+        const res = await orderSchema.find({});
+        console.log(res);
+        // Indexes and hooks are now defined in the schema file
     })
     .then(async () => {
-        // const res1 = await orderModel.insertOne({
+        // const res1 = await orderSchema.insertOne({
         //     items: {
         //         product_name: 'Laptop',
         //         price: 1200,
@@ -74,7 +72,7 @@ connectDB()
          * }
          * sum: 72
          */
-        const res = await orderModel.aggregate([
+        const res = await orderSchema.aggregate([
             // 1️⃣ Add a computed sum field (optional, just to illustrate)
             {
                 $addFields: {
@@ -116,5 +114,11 @@ connectDB()
 
 app.listen(PORT, () => {
     console.log(`Server is running http://localhost:${PORT}`);
+})
+
+// error handling
+app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(error);
+    res.status(400).json({ message: error.message });
 })
 

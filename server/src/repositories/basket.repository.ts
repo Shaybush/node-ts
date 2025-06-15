@@ -5,6 +5,7 @@ import { RedisConnection } from "../utils/redisConnection";
 export class BasketRepository {
     private static instance: BasketRepository;
     private redisClient: RedisConnection;
+
     private constructor() {
         this.redisClient = RedisConnection.getInstance();
     }

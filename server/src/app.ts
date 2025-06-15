@@ -1,8 +1,12 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { PORT } from './utils/environment-variables';
 import { RedisConnection } from './utils/redisConnection';
+import userRouter from './routers/user.router';
+import basketRouter from './routers/basket.router';
+import mongoose from 'mongoose';
+import orderModel from './models/order.model';
 
 const app = express();
 
@@ -16,22 +20,7 @@ app.use(helmet());
 // connect to redis
 RedisConnection.getInstance().connect();
 
-import mongoose from 'mongoose';
-import orderModel from './models/order.model';
 
-// app.use('/user', userRouter);
-// app.use('/basket', basketRouter);
-
-// app.get('/health', (req, res, next) => {
-//     next(new Error('error'))
-//     res.status(200).json({ message: 'OK' })
-// });
-
-// // error handling
-// app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
-//     console.error(error);
-//     res.status(400).json({ message: error.message });
-// })
 async function connectDB() {
     console.log("trying to connect mongoDB");
     mongoose.connect('mongodb://127.0.0.1:27017/Class4')
@@ -39,80 +28,43 @@ async function connectDB() {
         .catch((error) => console.error(error))
 }
 
-connectDB()
-    .then(async () => {
-        await orderModel.find({});
-        // console.log(res);
-    })
-    .then(async () => {
-        // const res1 = await orderModel.insertOne({
-        //     items: {
-        //         product_name: 'Laptop',
-        //         price: 1200,
-        //         quantity: 2,
-        //         tags: ['electronics', 'computer']
-        //     },
-        //     actual_amount: 2400,
-        //     expected_amount: 2500,
-        //     status: 'completed'
-        // })
-        // console.log(res1);
+const main = async () => {
+    await connectDB();
 
-    })
-    .then(async () => {
-        const page = 1;
-        const pageSize = 20;
-        /**
-         *
-         * {
-         *  price: 40,
-         *  name: 'mouse'
-         * }
-         *  {
-         *  price: 32,
-         *  name: 'keyboard'
-         * }
-         * sum: 72
-         */
-        const res = await orderModel.aggregate([
-            // 1️⃣ Add a computed sum field (optional, just to illustrate)
-            {
-                $addFields: {
-                    sum: { $multiply: ['$items.price', '$items.quantity'] }
-                }
-            },
-            // 2️⃣ Facet to separate results and metadata
-            {
-                $facet: {
-                    data: [
-                        { $skip: (page - 1) * pageSize },
-                        { $limit: pageSize } // 1: 0 - 20 2: 20 - 40, 3: 40 - 60
-                    ],
-                    metadata: [ // total: 5137
-                        { $count: 'total' },
-                        {
-                            $addFields: {
-                                page: page, // 1
-                                pageSize: pageSize, // 20
-                                totalPages: {
-                                    $ceil: { $divide: ['$total', pageSize] } // 4
-                                }
-                            }
-                        }
-                    ]
-                }
-            },
-            // 3️⃣ Reshape the output (optional)
-            {
-                $project: {
-                    data: 1,
-                    metadata: { $arrayElemAt: ['$metadata', 0] }
-                }
-            }
-        ])
-        console.log(res);
+    console.time('find');
+    const res = await orderModel.find({
+        'customer_name': { $regex: '^S', $options: 'i' },
+        'total': { $gt: 30 }
+    }).limit(5);
+    console.timeEnd('find');
 
+    console.log(res.length);
+
+    app.get('/health', (req, res, next) => {
+        next(new Error('error'))
+        res.status(200).json({ message: 'OK' })
+    });
+
+    app.use('/user', userRouter);
+    app.use('/basket', basketRouter);
+    app.get('/test', async (req: Request, res: Response, next: NextFunction) => {
+        console.log("I'm here !!!");
+        try {
+            await orderModel.insertOne({
+                customer_name: 'Shaun Thiel',
+                total: 30
+            });
+        } catch (error) {
+            next(error);
+        }
+    });
+
+    app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
+        res.status(400).json({ message: error.message });
     })
+}
+
+main();
 
 app.listen(PORT, () => {
     console.log(`Server is running http://localhost:${PORT}`);

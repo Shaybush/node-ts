@@ -63,7 +63,19 @@ connectDB()
     })
     .then(async () => {
         const page = 1;
-        const pageSize = 5;
+        const pageSize = 20;
+        /**
+         * 
+         * {
+         *  price: 40,
+         *  name: 'mouse'
+         * }
+         *  {
+         *  price: 32,
+         *  name: 'keyboard'
+         * }
+         * sum: 72
+         */
         const res = await orderModel.aggregate([
             // 1️⃣ Add a computed sum field (optional, just to illustrate)
             {
@@ -76,16 +88,16 @@ connectDB()
                 $facet: {
                     data: [
                         { $skip: (page - 1) * pageSize },
-                        { $limit: pageSize }
+                        { $limit: pageSize } // 1: 0 - 20 2: 20 - 40, 3: 40 - 60
                     ],
-                    metadata: [
+                    metadata: [ // total: 5137 
                         { $count: 'total' },
                         {
                             $addFields: {
-                                page: page,
-                                pageSize: pageSize,
+                                page: page, // 1
+                                pageSize: pageSize, // 20
                                 totalPages: {
-                                    $ceil: { $divide: ['$total', pageSize] }
+                                    $ceil: { $divide: ['$total', pageSize] } // 4
                                 }
                             }
                         }

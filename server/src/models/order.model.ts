@@ -47,5 +47,5 @@ schema.post('deleteOne', function (doc) {
     console.log('%s has been deleted', doc._id);
 });
 
-const orderSchema = mongoose.model<OrderSchema>('Order', schema);
+const orderSchema = mongoose.model<OrderSchema>('Orders', schema);
 export default orderSchema;

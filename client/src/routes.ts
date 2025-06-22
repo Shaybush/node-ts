@@ -9,6 +9,7 @@ const User = lazy(() => {
 const Test = lazy(() => {
   return import('./pages/Test')
 })
+const BlogPage = lazy(() => import('./pages/Blog'));
 
 export const routes = [
   {
@@ -34,5 +35,11 @@ export const routes = [
     text: 'pokemon',
     activeNames: ['/pokemon'],
     Component: PokemonPage,
+  },
+  {
+    to: '/blog',
+    text: 'blog',
+    activeNames: ['/blog'],
+    Component: BlogPage,
   },
 ];

@@ -9,3 +9,4 @@ export const REDIS_HOST: string = process.env.REDIS_HOST ?? 'localhost';
 export const REDIS_PORT: number = +(process.env.REDIS_PORT ?? 6379);
 // redis://username:password@localhost:6379
 export const REDIS_URI: string = `redis://${REDIS_HOST}:${REDIS_PORT}`;
+export const MONGO_URI: string = process.env.MONGO_URI ?? 'mongodb://localhost:27017/Class4';

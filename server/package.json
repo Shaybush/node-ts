@@ -4,7 +4,9 @@
   "main": "src/app.ts",
   "type": "commonjs",
   "scripts": {
-    "dev": "nodemon src/app.ts",
+    "kill-port": "node -e \"require('dotenv').config({path:'.env.local'}); const port = process.env.PORT || 8080; console.log('Killing processes on port:', port); require('child_process').exec('lsof -ti:' + port + ' | xargs kill -9 2>/dev/null || true', (err) => { if(!err) console.log('Port cleared'); });\"",
+    "dev": "npm run kill-port && sleep 2 && nodemon src/app.ts",
+    "dev:quick": "npm run kill-port && nodemon src/app.ts",
     "start": "node dist/app.js",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -14,15 +16,17 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@faker-js/faker": "^8.4.1",
     "axios": "^1.8.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "dotenv-expand": "^12.0.1",
     "express": "^4.21.2",
     "helmet": "^8.1.0",
+    "joi": "^17.13.3",
+    "mongoose": "^8.16.0",
     "redis": "^4.7.0",
-    "zod": "^3.24.2",
-    "@faker-js/faker": "^8.4.1"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

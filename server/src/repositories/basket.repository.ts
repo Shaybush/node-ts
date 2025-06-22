@@ -59,5 +59,4 @@ export class BasketRepository {
 }
 
 // Export the singleton instance getter
-
 export const getBasketRepository = BasketRepository.getInstance;

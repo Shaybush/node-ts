@@ -1,8 +1,7 @@
 import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { UserApiResponse } from "../types/user.types";
-import { PAGE_SIZE } from "@src/utils/constants";
 import { SortingState } from "@tanstack/react-table";
+import { getUsers } from "@src/api/users.api";
 
 export const useUserData = (sorting: SortingState) => {
     return useInfiniteQuery<UserApiResponse>({
@@ -11,14 +10,9 @@ export const useUserData = (sorting: SortingState) => {
             sorting, //refetch when sorting changes
         ],
         queryFn: async ({ pageParam = 0 }) => {
-            const response = await axios.get('http://localhost:8080/user', {
-                params: {
-                    start: pageParam,
-                    size: PAGE_SIZE,
-                    sort: sorting,
-                },
-            });
-            return response.data;
+            const page = pageParam as number;
+            const data = await getUsers({ pageParam: page, sorting });
+            return data;
         },
         initialPageParam: 0,
         getNextPageParam: (_lastGroup, groups) => groups.length,

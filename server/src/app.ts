@@ -7,7 +7,6 @@ import { MongoDBConnection } from './utils/mongodb';
 import userRouter from './routers/user.router';
 import basketRouter from './routers/basket.router';
 import orderRouter from './routers/order.router';
-import { watchUserLifecycleEvents } from './utils/userChangeStream';
 
 const app = express();
 
